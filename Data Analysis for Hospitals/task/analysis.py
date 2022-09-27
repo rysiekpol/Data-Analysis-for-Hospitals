@@ -14,5 +14,17 @@ merged_data.dropna(axis = 0, how='all', inplace=True)
 merged_data.replace({"female": "f", "woman": "f", "male": "m", "man": "m"}, inplace=True)
 merged_data["gender"].fillna("f", inplace=True)
 merged_data.fillna(0, inplace=True)
-print("Data shape:",merged_data.shape)
-print(merged_data.sample(n=20, random_state=30))
+
+number_of_patients = merged_data.hospital.value_counts().sort_values(ascending=False)
+stomach_share = merged_data[merged_data.hospital == "general"].diagnosis.value_counts().loc["stomach"]/merged_data[merged_data.hospital == "general"].shape[0]
+dislocation_share = merged_data[merged_data.hospital == "sports"].diagnosis.value_counts().loc["dislocation"]/merged_data[merged_data.hospital == "sports"].shape[0]
+median_difference = merged_data[merged_data.hospital == "general"].age.median() - merged_data[merged_data.hospital == "sports"].age.median()
+blood_rate = merged_data.pivot_table(index="hospital", columns="blood_test", values="age", aggfunc="count")["t"].sort_values(ascending=False)
+
+print("The answer to the 1st question is", number_of_patients.index[0])
+print("The answer to the 2nd question is", round(stomach_share,3))
+print("The answer to the 3rd question is", round(dislocation_share,3))
+print("The answer to the 4th question is", int(median_difference))
+print(f"The answer to the 5th question is {blood_rate.index[0]}, {int(blood_rate[0])} blood tests")
+
+
